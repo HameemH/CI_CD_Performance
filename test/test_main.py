@@ -10,22 +10,17 @@ def test_home():
     assert response.json() == {"Message": "Welcome to the Ticket Booking System"}
     
 def test_add():
-    response = client.post("/ticket", json=[{
-        "id": 1,
-        "flight_name": "US Bangla",
-        "flight_date": "2025-10-15",
+    ticket={
+            "id": 1,
+            "flight_name": "US Bangla",
+            "flight_date": "2025-10-15",
         "flight_time": "14:30",
         "destination": "Dhaka"
-    },
-    {
-        "id": 2,
-        "flight_name": "Biman Bangladesh",
-        "flight_date": "2025-11-20",
-        "flight_time": "10:00",
-        "destination": "Chittagong"
-    }])
+    
+    }
+    response = client.post("/ticket", json=ticket)
     assert response.status_code == 200
-    assert response.json() == "ticket added"
+    assert response.json() == ticket
     
 def test_get():
     response = client.get("/ticket")
@@ -33,17 +28,24 @@ def test_get():
     assert isinstance(response.json(), list)    
 
 def test_update():
-    response = client.put("/ticket/1", json={
+    update= {
         "id": 1,
         "flight_name": "US Bangla Updated",
         "flight_date": "2025-10-16",
         "flight_time": "15:30",
         "destination": "Dhaka Updated"
-    })
+    }
+    response = client.put("/ticket/1", json=update)
     assert response.status_code == 200
-    assert response.json() == "ticket updated"  
+    assert response.json() == update
 def test_delete():
-    response = client.delete("/ticket/2")
+    response = client.delete("/ticket/1")
     assert response.status_code == 200
-    assert response.json() == "ticket deleted"        
+    assert response.json() == {
+        "id": 1,
+        "flight_name": "US Bangla Updated",
+        "flight_date": "2025-10-16",
+        "flight_time": "15:30",
+        "destination": "Dhaka Updated"
+    }        
     
